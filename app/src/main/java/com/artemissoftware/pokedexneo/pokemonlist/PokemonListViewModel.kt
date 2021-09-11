@@ -30,6 +30,10 @@ class PokemonListViewModel @Inject constructor(private val repository: PokemonRe
     var endReached = mutableStateOf(false)
 
 
+    init{
+        loadPokemonPaginated()
+    }
+
     fun loadPokemonPaginated() {
 
         viewModelScope.launch {

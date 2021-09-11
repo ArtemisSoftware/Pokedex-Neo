@@ -1,9 +1,11 @@
 package com.artemissoftware.pokedexneo.pokemonlist
 
+import android.graphics.Bitmap
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -33,21 +35,31 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltNavGraphViewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import coil.Coil
+import coil.ImageLoader
+import coil.bitmap.BitmapPool
+import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
+import coil.size.Size
+import coil.transform.CircleCropTransformation
+import coil.transform.Transformation
+//import com.google.accompanist.coil.CoilImage
 import com.artemissoftware.pokedexneo.R
 import com.artemissoftware.pokedexneo.data.models.PokedexListEntry
 import com.artemissoftware.pokedexneo.ui.theme.RobotoCondensed
-import com.google.accompanist.coil.CoilImage
+import com.google.accompanist.coil.rememberCoilPainter
 
 @Composable
 fun PokemonListScreen(
-    navController: NavController?
+    navController: NavController
 ) {
     Surface(
         color = MaterialTheme.colors.background,
         modifier = Modifier.fillMaxSize()
     ) {
+
         Column {
             Spacer(modifier = Modifier.height(20.dp))
             Image(
@@ -65,6 +77,9 @@ fun PokemonListScreen(
             ) {
 
             }
+
+            Spacer(modifier = Modifier.height(16.dp))
+            PokemonList(navController = navController)
         }
     }
 }
@@ -112,13 +127,59 @@ fun SearchBar(
 
 
 
+@Composable
+fun PokemonList(
+    navController: NavController,
+    viewModel: PokemonListViewModel = hiltViewModel()
+) {
+    val pokemonList by remember { viewModel.pokemonList }
+    val endReached by remember { viewModel.endReached }
+    val loadError by remember { viewModel.loadError }
+    val isLoading by remember { viewModel.isLoading }
+
+    LazyColumn(contentPadding = PaddingValues(16.dp)) {
+        val itemCount = if(pokemonList.size % 2 == 0) {
+            pokemonList.size / 2
+        } else {
+            pokemonList.size / 2 + 1
+        }
+        items(itemCount) {
+            if(it >= itemCount - 1 && !endReached) {
+                viewModel.loadPokemonPaginated()
+            }
+            PokedexRow(rowIndex = it, entries = pokemonList, navController = navController)
+        }
+    }
+
+//    Box(
+//        contentAlignment = Center,
+//        modifier = Modifier.fillMaxSize()
+//    ) {
+//        if(isLoading) {
+//            CircularProgressIndicator(color = MaterialTheme.colors.primary)
+//        }
+//        if(loadError.isNotEmpty()) {
+//            RetrySection(error = loadError) {
+//                viewModel.loadPokemonPaginated()
+//            }
+//        }
+//    }
+
+}
+
+
+
+
+
+
+
 
 @Composable
 fun PokedexEntry(
     entry: PokedexListEntry,
     navController: NavController,
     modifier: Modifier = Modifier,
-    viewModel: PokemonListViewModel = hiltNavGraphViewModel()
+    viewModel: PokemonListViewModel = hiltViewModel()
 ) {
     val defaultDominantColor = MaterialTheme.colors.surface
 
@@ -147,26 +208,83 @@ fun PokedexEntry(
             }
     ) {
         Column {
-            CoilImage(
-                request = ImageRequest.Builder(LocalContext.current)
-                    .data(entry.imageUrl)
-                    .target {
-                        viewModel.calcDominantColor(it) { color ->
-                            dominantColor = color
-                        }
+
+
+            Image(
+                painter = rememberImagePainter(
+                    data = entry.imageUrl,
+                    builder = {
+                        crossfade(true)
                     }
-                    .build(),
-                contentDescription = entry.pokemonName,
-                fadeIn = true,
-                modifier = Modifier
-                    .size(120.dp)
-                    .align(CenterHorizontally)
-            ) {
-                CircularProgressIndicator(
-                    color = MaterialTheme.colors.primary,
-                    modifier = Modifier.scale(0.5f)
-                )
-            }
+
+                ),
+                contentDescription = null,
+                modifier = Modifier.size(120.dp).align(CenterHorizontally)
+            )
+
+
+//            val painter = rememberCoilPainter(
+//                request = entry.imageUrl,
+//                requestBuilder = {
+//                    transformations(
+//                        object: Transformation {
+//                            override fun key(): String {
+//                                return entry.imageUrl
+//                            }
+//                            override suspend fun transform(
+//                                pool: BitmapPool,
+//                                input: Bitmap,
+//                                size: Size
+//                            ): Bitmap {
+//                                viewModel.calcDominantColor(input) { color ->
+//                                    dominantColor = color
+//                                }
+//                                return input
+//                            }
+//                        }
+//                    )
+//                }
+//            )
+
+//            Image(
+//                painter = rememberCoilPainter(
+//                    request = ImageRequest.Builder(LocalContext.current)
+//                        .data(entry.imageUrl)
+//                        .target {
+//                            viewModel.calcDominantColor(it) { color ->
+//                                dominantColor = color
+//                            }
+//                        }.build(),
+//                    requestBuilder = {
+//                        transformations(CircleCropTransformation())
+//                    },
+//                    fadeIn = true,
+//                ),
+//                contentDescription = entry.pokemonName,
+//                modifier = Modifier.size(120.dp).align(CenterHorizontally)
+//            )
+
+//            {
+////            CoilImage(
+////                request = ImageRequest.Builder(LocalContext.current)
+////                    .data(entry.imageUrl)
+////                    .target {
+////                        viewModel.calcDominantColor(it) { color ->
+////                            dominantColor = color
+////                        }
+////                    }
+////                    .build(),
+////                contentDescription = entry.pokemonName,
+////                fadeIn = true,
+////                modifier = Modifier
+////                    .size(120.dp)
+////                    .align(CenterHorizontally)
+////            ) {
+//                CircularProgressIndicator(
+//                    color = MaterialTheme.colors.primary,
+//                    modifier = Modifier.scale(0.5f)
+//                )
+//            }
             Text(
                 text = entry.pokemonName,
                 fontFamily = RobotoCondensed,
@@ -213,5 +331,5 @@ fun PokedexRow(
 @Preview(showBackground = true)
 @Composable
 fun ComposablePreview() {
-    PokemonListScreen(null)
+    //--PokemonListScreen(null)
 }
