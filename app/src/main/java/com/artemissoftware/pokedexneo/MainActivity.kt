@@ -64,10 +64,10 @@ class MainActivity : ComponentActivity() {
 }
 
 
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    PokedexNeoTheme {
-
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun DefaultPreview() {
+//    PokedexNeoTheme {
+//
+//    }
+//}
