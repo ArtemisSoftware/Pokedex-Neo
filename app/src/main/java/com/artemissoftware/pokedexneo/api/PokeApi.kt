@@ -8,6 +8,12 @@ import retrofit2.http.Query
 
 interface PokeApi {
 
+    companion object{
+
+        const val BASE_URL = "https://pokeapi.co/api/v2/"
+    }
+
+
     @GET("pokemon")
     suspend fun getPokemonList(
         @Query("limit") limit: Int,
