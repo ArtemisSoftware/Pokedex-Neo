@@ -9,10 +9,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.*
@@ -151,19 +148,19 @@ fun PokemonList(
         }
     }
 
-//    Box(
-//        contentAlignment = Center,
-//        modifier = Modifier.fillMaxSize()
-//    ) {
-//        if(isLoading) {
-//            CircularProgressIndicator(color = MaterialTheme.colors.primary)
-//        }
-//        if(loadError.isNotEmpty()) {
-//            RetrySection(error = loadError) {
-//                viewModel.loadPokemonPaginated()
-//            }
-//        }
-//    }
+    Box(
+        contentAlignment = Center,
+        modifier = Modifier.fillMaxSize()
+    ) {
+        if(isLoading) {
+            CircularProgressIndicator(color = MaterialTheme.colors.primary)
+        }
+        if(loadError.isNotEmpty()) {
+            RetrySection(error = loadError) {
+                viewModel.loadPokemonPaginated()
+            }
+        }
+    }
 
 }
 
@@ -326,6 +323,24 @@ fun PokedexRow(
     }
 }
 
+
+
+@Composable
+fun RetrySection(
+    error: String,
+    onRetry: () -> Unit
+) {
+    Column {
+        Text(error, color = Color.Red, fontSize = 18.sp)
+        Spacer(modifier = Modifier.height(8.dp))
+        Button(
+            onClick = { onRetry() },
+            modifier = Modifier.align(CenterHorizontally)
+        ) {
+            Text(text = "Retry")
+        }
+    }
+}
 
 
 @Preview(showBackground = true)
