@@ -133,54 +133,6 @@ fun PokemonDetailScreen(
 }
 
 
-@Composable
-fun MyScrollingScreen(modifier: Modifier = Modifier) {
-
-    val scrollState = rememberScrollState()
-
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier
-            .fillMaxSize()
-            .offset(y = 100.dp)
-            .verticalScroll(scrollState)
-    ) {
-//        Text(
-//            text = "#${pokemonInfo.id} ${pokemonInfo.name.capitalize(Locale.ROOT)}",
-//            fontWeight = FontWeight.Bold,
-//            fontSize = 30.sp,
-//            textAlign = TextAlign.Center,
-//            color = MaterialTheme.colors.onSurface
-//        )
-//        PokemonTypeSection(types = pokemonInfo.types)
-//        PokemonDetailDataSection(
-//            pokemonWeight = pokemonInfo.weight,
-//            pokemonHeight = pokemonInfo.height
-//        )
-//        PokemonBaseStats(pokemonInfo = pokemonInfo)
-
-        BookImage(R.drawable.ic_international_pok_mon_logo)
-        BookImage(R.drawable.ic_height)
-        BookImage(R.drawable.ic_international_pok_mon_logo)
-    }
-
-
-
-//    Column(modifier = modifier.verticalScroll(rememberScrollState())) {
-//
-//                Text(
-//            text = "AAAAAAAA",
-//            fontWeight = FontWeight.Bold,
-//            fontSize = 30.sp,
-//            textAlign = TextAlign.Center,
-//            color = MaterialTheme.colors.onSurface
-//        )
-//
-//        BookImage(R.drawable.ic_international_pok_mon_logo)
-//        BookImage(R.drawable.ic_height)
-//        BookImage(R.drawable.ic_international_pok_mon_logo)
-//    }
-}
 
 @Composable
 fun BookImage(@DrawableRes imageResId: Int){
@@ -265,34 +217,6 @@ fun PokemonDetailSection(
     pokemonInfo: Pokemon,
     modifier: Modifier = Modifier
 ) {
-
-//    val scrollState = rememberScrollState()
-//
-//    Column(
-//        horizontalAlignment = Alignment.CenterHorizontally,
-//        modifier = modifier
-//            .fillMaxSize()
-//            .offset(y = 100.dp)
-//            .verticalScroll(scrollState)
-//    ) {
-////        Text(
-////            text = "#${pokemonInfo.id} ${pokemonInfo.name.capitalize(Locale.ROOT)}",
-////            fontWeight = FontWeight.Bold,
-////            fontSize = 30.sp,
-////            textAlign = TextAlign.Center,
-////            color = MaterialTheme.colors.onSurface
-////        )
-////        PokemonTypeSection(types = pokemonInfo.types)
-////        PokemonDetailDataSection(
-////            pokemonWeight = pokemonInfo.weight,
-////            pokemonHeight = pokemonInfo.height
-////        )
-////        PokemonBaseStats(pokemonInfo = pokemonInfo)
-//
-//        BookImage(R.drawable.ic_international_pok_mon_logo)
-//        BookImage(R.drawable.ic_height)
-//        BookImage(R.drawable.ic_international_pok_mon_logo)
-//    }
 
 
     val scrollState = rememberScrollState()
